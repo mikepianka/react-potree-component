@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import useBasicViewerConfig from "../hooks/useBasicViewerConfig";
+import useLoadPointcloud from "../hooks/useLoadPointcloud.ts";
 
 export default function PotreePointcloud() {
   const iframe = useRef(null);
@@ -15,57 +17,17 @@ export default function PotreePointcloud() {
   }, [loaded]);
 
   // viewer config
-  useEffect(() => {
-    if (loaded && potreeViewer.current && potreeLib.current) {
-      const Potree = potreeLib.current;
-      const viewer = potreeViewer.current;
-
-      viewer.setEDLEnabled(true);
-      viewer.setFOV(60);
-      viewer.setPointBudget(1_000_000);
-      viewer.loadSettingsFromURL();
-      viewer.setBackground("gradient");
-      viewer.setDescription("potree component");
-
-      const controls = new Potree.EarthControls(viewer);
-      viewer.setControls(controls);
-
-      viewer.loadGUI(() => {
-        viewer.setLanguage("en");
-        // $("#menu_tools").next().show();
-        // $("#menu_clipping").next().show();
-        // viewer.toggleSidebar();
-      });
-
-      console.log("Potree viewer config complete");
-    }
-  }, [loaded]);
+  useBasicViewerConfig(loaded, potreeLib, potreeViewer);
 
   // load pointcloud
-  useEffect(() => {
-    if (loaded && potreeViewer.current && potreeLib.current) {
-      const Potree = potreeLib.current;
-      const viewer = potreeViewer.current;
-
-      Potree.loadPointCloud(
-        "./pointclouds/vol_total/cloud.js",
-        "sigeom.sa",
-        (e) => {
-          let scene = viewer.scene;
-          let pointcloud = e.pointcloud;
-
-          let material = pointcloud.material;
-          material.size = 1;
-          material.pointSizeType = Potree.PointSizeType.FIXED;
-          material.shape = Potree.PointShape.CIRCLE;
-
-          scene.addPointCloud(pointcloud);
-
-          viewer.fitToScreen();
-        }
-      );
-    }
-  }, [loaded]);
+  useLoadPointcloud(
+    loaded,
+    potreeLib,
+    potreeViewer,
+    "./pointclouds/vol_total/cloud.js",
+    "sigeom",
+    true
+  );
 
   return (
     <div style={potreePointcloudStyle}>
