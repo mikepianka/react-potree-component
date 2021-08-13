@@ -44,9 +44,6 @@
     <script src="./build/potree/potree.js"></script>
     <script src="./libs/plasio/js/laslaz.js"></script>
 
-    <!-- INCLUDE ADDITIONAL DEPENDENCIES HERE -->
-    <!-- INCLUDE SETTINGS HERE -->
-
     <div
       class="potree_container"
       style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px"
@@ -55,45 +52,10 @@
       <div id="potree_sidebar_container"></div>
     </div>
 
-    <script type="module">
+    <script>
+      // need to declare global viewer property on window, alot of Potree depends on it
       window.viewer = new Potree.Viewer(
         document.getElementById("potree_render_area")
-      );
-
-      viewer.setEDLEnabled(false);
-      viewer.setFOV(60);
-      viewer.setPointBudget(1_000_000);
-      viewer.loadSettingsFromURL();
-      viewer.setBackground("gradient");
-
-      viewer.setDescription(
-        "Point cloud courtesy of <a target='_blank' href='https://www.sigeom.ch/'>sigeom sa</a>"
-      );
-
-      viewer.loadGUI(() => {
-        viewer.setLanguage("en");
-        $("#menu_tools").next().show();
-        $("#menu_clipping").next().show();
-        // viewer.toggleSidebar();
-      });
-
-      // Load and add point cloud to scene
-      Potree.loadPointCloud(
-        "./pointclouds/vol_total/cloud.js",
-        "sigeom.sa",
-        (e) => {
-          let scene = viewer.scene;
-          let pointcloud = e.pointcloud;
-
-          let material = pointcloud.material;
-          material.size = 1;
-          material.pointSizeType = Potree.PointSizeType.FIXED;
-          material.shape = Potree.PointShape.CIRCLE;
-
-          scene.addPointCloud(pointcloud);
-
-          viewer.fitToScreen();
-        }
       );
     </script>
   </body>
