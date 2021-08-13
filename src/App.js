@@ -1,11 +1,12 @@
 import "./App.css";
+import PotreePointcloud from "./components/PotreePointcloud";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>a React component for Potree</h1>
-      </header>
+      <h1>a Potree component in React</h1>
+
+      <PotreePointcloud />
     </div>
   );
 }
