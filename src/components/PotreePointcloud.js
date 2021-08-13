@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import useBasicViewerConfig from "../hooks/useBasicViewerConfig";
-import useLoadPointcloud from "../hooks/useLoadPointcloud.ts";
+import useLoadPointcloud from "../hooks/useLoadPointcloud.js";
 
 export default function PotreePointcloud() {
   const iframe = useRef(null);
