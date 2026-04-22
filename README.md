@@ -1,70 +1,175 @@
-# Getting Started with Create React App
+# React Potree Component
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React component for rendering 3D point clouds using [Potree](https://github.com/potree/potree), a WebGL-based point cloud renderer.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Easy integration of Potree point cloud viewer into React applications
+- Customizable viewer configuration
+- Support for loading point cloud data
+- Responsive iframe-based rendering
 
-### `npm start`
+## Installation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+**Requirements:**
+- Node.js v16 or less (due to compatibility with react-scripts 4.0.3)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Clone the repository and install dependencies:
 
-### `npm test`
+```bash
+git clone https://github.com/your-username/react-potree-component.git
+cd react-potree-component
+npm install
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Usage
 
-### `npm run build`
+### Basic Usage
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Import and use the `PotreePointcloud` component in your React app:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```jsx
+import React from 'react';
+import PotreePointcloud from './components/PotreePointcloud';
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+function App() {
+  return (
+    <div className="App">
+      <h1>Point Cloud Viewer</h1>
+      <PotreePointcloud />
+    </div>
+  );
+}
 
-### `npm run eject`
+export default App;
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Customizing the Component
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The component currently loads a default point cloud. To customize:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+1. **Point Cloud Data**: Place your point cloud data in the `public/pointclouds/` directory. The data should be in Potree format with a `cloud.js` file.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+2. **Configuration**: Modify the hooks in `src/hooks/` to customize viewer settings:
+   - `useBasicViewerConfig.js`: Configure viewer properties like FOV, point budget, controls
+   - `useLoadPointcloud.js`: Load different point clouds or adjust material properties
 
-## Learn More
+3. **Styling**: Adjust the `potreePointcloudStyle` and `iframeStyle` in `PotreePointcloud.js` for sizing and layout.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Component API
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### PotreePointcloud
 
-### Code Splitting
+A React component that renders a Potree point cloud viewer.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+**Props**: Currently none (hardcoded configuration). Future versions may accept props for customization.
 
-### Analyzing the Bundle Size
+**Styling**: The component uses inline styles. Modify `potreePointcloudStyle` and `iframeStyle` for custom dimensions.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Hooks
 
-### Making a Progressive Web App
+### useBasicViewerConfig
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Configures the Potree viewer with basic settings.
 
-### Advanced Configuration
+```javascript
+useBasicViewerConfig(loaded, potreeLibRef, potreeViewerRef);
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- `loaded`: Boolean indicating if the iframe has loaded
+- `potreeLibRef`: Reference to the Potree library
+- `potreeViewerRef`: Reference to the Potree viewer instance
 
-### Deployment
+### useLoadPointcloud
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Loads a point cloud into the viewer.
 
-### `npm run build` fails to minify
+```javascript
+useLoadPointcloud(
+  loaded,
+  potreeLibRef,
+  potreeViewerRef,
+  pointcloudURL,
+  pointcloudTitle,
+  fitToScreen
+);
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- `loaded`: Boolean indicating if the iframe has loaded
+- `potreeLibRef`: Reference to the Potree library
+- `potreeViewerRef`: Reference to the Potree viewer instance
+- `pointcloudURL`: URL to the point cloud data (relative to viewer.html)
+- `pointcloudTitle`: Title for the point cloud
+- `fitToScreen`: Whether to fit the point cloud to screen after loading
+
+## Project Structure
+
+```
+src/
+├── components/
+│   └── PotreePointcloud.js    # Main component
+├── hooks/
+│   ├── useBasicViewerConfig.js  # Viewer configuration hook
+│   └── useLoadPointcloud.js     # Point cloud loading hook
+├── App.js                     # Example usage
+└── index.js                   # App entry point
+
+public/
+├── potree/                    # Potree library files
+│   ├── viewer.html            # Potree viewer page
+│   ├── build/                 # Compiled Potree assets
+│   └── libs/                  # Third-party libraries
+└── pointclouds/               # Point cloud data (not included)
+```
+
+## Development
+
+### Running the App
+
+```bash
+npm start
+```
+
+Opens the app in development mode at [http://localhost:3000](http://localhost:3000).
+
+### Building for Production
+
+```bash
+npm run build
+```
+
+Builds the app for production to the `build` folder.
+
+### Testing
+
+```bash
+npm test
+```
+
+Launches the test runner in interactive watch mode.
+
+## Dependencies
+
+- React 17+
+- Potree (bundled in `public/potree/`)
+
+## Browser Support
+
+Supports modern browsers with WebGL support.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License. See the Potree library licenses in `public/potree/libs/` for third-party dependencies.
+
+## Acknowledgments
+
+- [Potree](https://github.com/potree/potree) - WebGL point cloud renderer
+- [Create React App](https://github.com/facebook/create-react-app) - React app boilerplate
